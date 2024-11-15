@@ -1,26 +1,27 @@
-version: "3.8"  
+version: "3.8"
 
 services:
+  mysql:
+    container_name: mysql-container
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+
   phpmyadmin:
     container_name: phpmyadmin-container
-    image: phpmyadmin:latest  
+    image: phpmyadmin:latest
     ports:
       - "8080:80"
     environment:
-      PMA_HOST: db  
+      PMA_HOST: mysql  # Conexión con el servicio MySQL
     depends_on:
-      - mysql  
-    restart: unless-stopped  
-
-  mysql:
-    container_name: mysql-container
-    image: mysql:latest  
-    environment:
-      MYSQL_ROOT_PASSWORD: root 
-    volumes:
-      - mysql-data:/var/lib/mysql 
-    restart: unless-stopped 
+      - mysql
+    restart: unless-stopped
 
 volumes:
   mysql-data:
-    name: mysql-data 
+    external: true
+    name: mysql-data
